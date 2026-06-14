@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Now - Celtics Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: palegoldenrod;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+            nav .logo h1 {
+                color: white;
+                font-style: italic;
+                font-size: 24px;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                padding: 0;
+                margin: 0;
+            }
+
+                nav ul li {
+                    margin: 0 15px;
+                }
+
+                    nav ul li a {
+                        text-decoration: none;
+                        color: black;
+                        background-color: lightblue;
+                        padding: 10px 15px;
+                        border-radius: 5px;
+                        transition: 0.3s;
+                    }
+
+                        nav ul li a:hover {
+                            background-color: navy;
+                            color: white;
+                        }
+
+        /* Menu Section */
+        .food-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .food-item {
+            background: #1E3A8A;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+            .food-item img {
+                width: 100%;
+                height: 180px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .add-to-cart {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+            .add-to-cart:hover {
+                background: #0056b3;
+            }
+
+        .view-cart {
+            background: green;
+            padding: 12px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin: 30px auto;
+            width: 220px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .view-cart:hover {
+                background: darkgreen;
+            }
+
+        /* Footer */
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+            footer p {
+                margin: 5px 0;
+            }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .food-menu {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .view-cart {
+                width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <h1>Celtics Restaurant</h1>
+        </div>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#" id="loginLogoutBtn" onclick="toggleLoginLogout()">Log In</a></li>
+            <li><a href="order.html">Order</a></li>
+            <li><a href="cart.html">Cart</a></li>
+        </ul>
+    </nav>
+
+    <h2 style="text-align:center; margin-top:20px;">Select Your Meal</h2>
+
+    <div class="food-menu" id="foodMenu">
+        <!-- Items will be loaded dynamically -->
+    </div>
+
+    <a href="cart.html" class="view-cart">View Cart</a>
+
+    <footer>
+        <p>&copy; 2025 Celtics Restaurant. All rights reserved.</p>
+        <p>Contact us: celticsrestaurant@gmail.com | +254 712 345 678 | +254 798 765 432</p>
+        <p>Location: Bogani Road in Karen, Nairobi</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchMenu();
+            updateLoginLogoutButton();
+        });
+
+        function fetchMenu() {
+            const apiBaseUrl = "http://localhost:5282"; // Ensure this matches your backend
+            fetch(apiBaseUrl + "/api/fooditems")
+                .then(response => {
+                    console.log("API Response:", response);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch menu");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Fetched Data:", data); // Debugging output
+
+                    const foodMenu = document.getElementById("foodMenu");
+                    foodMenu.innerHTML = ""; // Clear menu before adding items
+
+                    data.forEach(item => {
+                        const foodItem = document.createElement("div");
+                        foodItem.classList.add("food-item");
+
+                        // Fixing the image URL handling
+                        let imageUrl = item.fullImageUrl;
+                        if (!imageUrl || !imageUrl.startsWith("http")) {
+                            imageUrl = `${apiBaseUrl}/images/${item.imageUrl}`;
+                        }
+
+                        // Prevent broken images
+                        foodItem.innerHTML = `
+                            <img src="${imageUrl}" alt="${item.name}" onerror="this.src='fallback-image.jpg';">
+                            <h3>${item.name}</h3>
+                            <p>${item.description}</p>
+                            <p><strong>Price: KES ${item.price}</strong></p>
+                            <button class="add-to-cart" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, '${imageUrl}')">Add to Cart</button>
+                        `;
+
+                        foodMenu.appendChild(foodItem);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching menu:", error);
+                    document.getElementById("foodMenu").innerHTML = "<p style='text-align:center; color:red;'>Failed to load menu. Please try again later.</p>";
+                });
+        }
+
+        function addToCart(id, name, price, imageUrl) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let itemIndex = cart.findIndex(item => item.id === id);
+
+            if (itemIndex !== -1) {
+                alert(name + " is already in your cart!");
+            } else {
+                cart.push({ id, name, price, imageUrl, quantity: 1 });
+                alert(name + " has been added to your cart!");
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+
+        function updateLoginLogoutButton() {
+            const loginLogoutBtn = document.getElementById("loginLogoutBtn");
+            if (localStorage.getItem("isLoggedIn")) {
+                loginLogoutBtn.textContent = "Log Out";
+                loginLogoutBtn.onclick = logout;
+            } else {
+                loginLogoutBtn.textContent = "Log In";
+                loginLogoutBtn.onclick = login;
+            }
+        }
+
+        function login() {
+            window.location.href = "login.html";
+        }
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            updateLoginLogoutButton();
+            alert("You have been logged out.");
+        }
+
+        function toggleLoginLogout() {
+            if (localStorage.getItem("isLoggedIn")) {
+                logout();
+            } else {
+                login();
+            }
+        }
+    </script>
+
+
+</body>
+</html>

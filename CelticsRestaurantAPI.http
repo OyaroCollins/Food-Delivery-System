@@ -1,0 +1,6 @@
+@CelticsRestaurantAPI_HostAddress = http://localhost:5282
+
+GET {{CelticsRestaurantAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

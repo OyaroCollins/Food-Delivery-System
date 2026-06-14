@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Celtics Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 50%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #0056b3;
+            }
+
+        .order-items {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+
+            .order-items table {
+                width: 100%;
+                margin-bottom: 15px;
+                border-collapse: collapse;
+            }
+
+            .order-items th, .order-items td {
+                padding: 8px;
+                border: 1px solid #ccc;
+            }
+
+            .order-items th {
+                text-align: left;
+                background: #f1f1f1;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Checkout</h2>
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="phoneNumber" placeholder="Enter your phone number" required>
+
+        <label>Address</label>
+        <input type="text" id="address" placeholder="Enter your delivery address" required>
+
+        <label>Payment Method</label>
+        <select id="paymentMethod">
+            <option value="Cash">Cash on Delivery</option>
+            <option value="M-Pesa">M-Pesa</option>
+        </select>
+
+        <div class="order-items" id="orderItems"></div>
+
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            loadOrderDetails();
+        });
+
+        function loadOrderDetails() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const orderItemsContainer = document.getElementById("orderItems");
+
+            if (cart.length === 0) {
+                orderItemsContainer.innerHTML = "<p>No items in your cart.</p>";
+                return;
+            }
+
+            let total = 0;
+            let orderHtml = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price (KES)</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+            cart.forEach(item => {
+                orderHtml += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.price}</td>
+                            <td>${item.quantity}</td>
+                        </tr>
+                    `;
+                total += item.price * item.quantity;
+            });
+
+            orderHtml += `
+                        </tbody>
+                    </table>
+                    <p><strong>Total Price:</strong> KES ${total}</p>
+                `;
+
+            orderItemsContainer.innerHTML = orderHtml;
+        }
+        function placeOrder() {
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const paymentMethod = document.getElementById("paymentMethod").value;
+            const customerId = localStorage.getItem("userId");
+
+            if (!customerId) {
+                alert("You need to be logged in to place an order.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            if (!phoneNumber || !address || cart.length === 0) {
+                alert("Please enter all required details and ensure your cart is not empty.");
+                return;
+            }
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            const orderData = {
+                customerId: parseInt(customerId),
+                phoneNumber: phoneNumber,
+                address: address,
+                paymentMethod: paymentMethod,
+                totalPrice: totalPrice,
+                orderItems: cart.map(item => ({
+                    foodItemId: parseInt(item.id),
+                    quantity: parseInt(item.quantity)
+                }))
+            };
+
+            console.log("Order Data being sent:", JSON.stringify(orderData, null, 2)); // 🔍 Debug Request
+
+            fetch("http://localhost:5282/api/orders/place", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Server Response:", data); // 🔍 Debug Response
+                    if (data.message) {
+                        alert(data.message);
+                        localStorage.removeItem("cart");
+                        window.location.href = "home.html";
+                    } else {
+                        alert("Order failed. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to place order. Please try again.");
+                });
+        }
+
+    </script>
+
+</body>
+</html>

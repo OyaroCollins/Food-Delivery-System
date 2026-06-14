@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Celtics Restaurant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #003366;
+            padding: 30px 15px;
+            color: white;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .sidebar h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .sidebar p {
+                font-size: 18px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .sidebar .admin-name {
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 12px 15px;
+                color: white;
+                text-decoration: none;
+                font-size: 18px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar a:hover {
+                    background-color: #007BFF;
+                }
+
+            .sidebar .logout {
+                background-color: #FF0000;
+                color: white;
+                padding: 12px 25px;
+                font-size: 18px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 30px;
+                text-align: center;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar .logout:hover {
+                    background-color: #cc0000;
+                }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .function-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .function-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .function-card h3 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            .function-card ul {
+                list-style-type: none;
+            }
+
+                .function-card ul li {
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                    padding-left: 20px;
+                    position: relative;
+                }
+
+                    .function-card ul li::before {
+                        content: '✔';
+                        position: absolute;
+                        left: 0;
+                        font-size: 22px;
+                        color: green;
+                    }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 20px 10px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .sidebar .logout {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+    window.onload = function () {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const userRole = localStorage.getItem("userRole");
+        const userName = localStorage.getItem("userName");
+
+        // Ensure the user is logged in and is an admin
+        if (isLoggedIn !== "true" || userRole !== "Admin") {
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Set the admin name in the sidebar
+        const adminNameElement = document.getElementById("admin-name");
+        if (adminNameElement) {
+            adminNameElement.textContent = `Admin - ${userName || "Unknown"}`;
+        }
+    };
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userName");
+        window.location.href = "login.html"; // Redirect to login page
+    }
+    </script>
+
+
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <p class="admin-name" id="admin-name"></p>
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="manage_orders.html">Manage Orders</a>
+        <a href="manage_food_items.html">Manage Food Items</a>
+        <a href="manage_customers.html">Manage Customers</a>
+        <a href="manage_admins.html">Manage Admins</a>
+
+        <!-- Logout Button -->
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="navbar">
+            Welcome to Admin Panel
+        </div>
+
+        <div class="container">
+            <h2>Admin Functions</h2>
+
+            <div class="function-card">
+                <h3>Manage Orders</h3>
+                <ul>
+                    <li>View all customer orders.</li>
+                    <li>Update the status of orders.</li>
+                    <li>Assign orders to delivery guys.</li>
+                    <li>Cancel Orders only 24 hours after no communication from customer.</li>
+                </ul>
+            </div>
+
+            <div class="function-card">
+                <h3>Manage Food Items</h3>
+                <ul>
+                    <li>Add new food items to the menu.</li>
+                    <li>Edit or delete existing food items.</li>
+                    <li>View food item details and availability.</li>
+                </ul>
+            </div>
+            <div class="function-card">
+                <h3>Manage Customers</h3>
+                <ul>
+                    <li>Add or delete costomers.</li>
+                    <li>View customer login details.</li>
+                    <li>View customer order history.</li>
+                </ul>
+            </div>
+            <div class="function-card">
+                <h3>Manage other Administrators.</h3>
+                <ul>
+                    <li>Add new administrator.</li>
+                    <li>Delete an administrator.</li>
+                </ul>
+            </div>
+</body>
+</html>

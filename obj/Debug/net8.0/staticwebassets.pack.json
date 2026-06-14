@@ -1,0 +1,117 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\Register.html",
+      "PackagePath": "staticwebassets\\Pages\\Register.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\admin_dashboard.html",
+      "PackagePath": "staticwebassets\\Pages\\admin_dashboard.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\cart.html",
+      "PackagePath": "staticwebassets\\Pages\\cart.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\checkout.html",
+      "PackagePath": "staticwebassets\\Pages\\checkout.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\home.html",
+      "PackagePath": "staticwebassets\\Pages\\home.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\login.html",
+      "PackagePath": "staticwebassets\\Pages\\login.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\manage_admins.html",
+      "PackagePath": "staticwebassets\\Pages\\manage_admins.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\manage_customers.html",
+      "PackagePath": "staticwebassets\\Pages\\manage_customers.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\manage_food_items.html",
+      "PackagePath": "staticwebassets\\Pages\\manage_food_items.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\manage_orders.html",
+      "PackagePath": "staticwebassets\\Pages\\manage_orders.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\Pages\\order.html",
+      "PackagePath": "staticwebassets\\Pages\\order.html"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\Burger.webp",
+      "PackagePath": "staticwebassets\\images\\Burger.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\chapati.webp",
+      "PackagePath": "staticwebassets\\images\\chapati.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\chicken.webp",
+      "PackagePath": "staticwebassets\\images\\chicken.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\chips.webp",
+      "PackagePath": "staticwebassets\\images\\chips.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\fish.webp",
+      "PackagePath": "staticwebassets\\images\\fish.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\hotdog.webp",
+      "PackagePath": "staticwebassets\\images\\hotdog.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\juice.webp",
+      "PackagePath": "staticwebassets\\images\\juice.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\pilau.webp",
+      "PackagePath": "staticwebassets\\images\\pilau.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\pizza.webp",
+      "PackagePath": "staticwebassets\\images\\pizza.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\soda.webp",
+      "PackagePath": "staticwebassets\\images\\soda.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\soda2.webp",
+      "PackagePath": "staticwebassets\\images\\soda2.webp"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Documents\\celtics\\CelticsRestaurantAPI\\CelticsRestaurantAPI\\wwwroot\\images\\water.webp",
+      "PackagePath": "staticwebassets\\images\\water.webp"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CelticsRestaurantAPI.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CelticsRestaurantAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.CelticsRestaurantAPI.props",
+      "PackagePath": "build\\CelticsRestaurantAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.CelticsRestaurantAPI.props",
+      "PackagePath": "buildMultiTargeting\\CelticsRestaurantAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.CelticsRestaurantAPI.props",
+      "PackagePath": "buildTransitive\\CelticsRestaurantAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

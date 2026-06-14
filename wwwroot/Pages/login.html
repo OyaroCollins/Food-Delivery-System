@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Celtics Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('file:///C:/Users/admin/Documents/celtics/CELTIC~4/CELTIC~1/wwwroot/images/DALLE2~1.WEB') no-repeat center center/cover;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login-container {
+            width: 350px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 128, 0.8); /* Transparent navy background */
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+        }
+
+            button:hover {
+                background: #0056b3;
+            }
+
+        .forgot-password, .signup {
+            color: yellow;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        async function loginUser(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorDiv = document.getElementById("error-message");
+
+            errorDiv.textContent = ""; // Clear previous errors
+
+            if (!email || !password) {
+                errorDiv.textContent = "❌ Both fields are required!";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5282/api/Auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userName", data.name || "User"); // ✅ Ensure name is stored
+                    localStorage.setItem("userEmail", data.email);
+                    localStorage.setItem("userRole", data.role);
+                    localStorage.setItem("userId", data.id);
+
+                    alert(data.message);
+
+                    if (data.role === "Admin") {
+                        window.location.href = "admin_dashboard.html";
+                    } else {
+                        window.location.href = "home.html";
+                    }
+                } else {
+                    errorDiv.textContent = data.message || "❌ Invalid credentials. Try again.";
+                }
+            } catch (error) {
+                errorDiv.textContent = "❌ Error connecting to server. Please try again later.";
+            }
+        }
+
+        window.onload = function () {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const userRole = localStorage.getItem("userRole");
+
+            if (isLoggedIn === "true" && userRole) {
+                if (window.location.pathname.includes("login.html")) {
+                    if (userRole === "Admin") {
+                        window.location.href = "admin_dashboard.html";
+                    } else {
+                        window.location.href = "home.html";
+                    }
+                }
+            }
+        };
+
+    </script>
+
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form onsubmit="loginUser(event)">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+        <p><a href="#" class="forgot-password">Forgot password?</a></p>
+        <p>Don't have an account? <a href="register.html" class="signup">Sign Up</a></p>
+    </div>
+</body>
+</html>

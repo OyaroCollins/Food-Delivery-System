@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food Items | Celtics Restaurant</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- For AJAX -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #003366;
+            padding: 30px 15px;
+            color: white;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .sidebar h1 {
+                font-size: 24px;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 12px 15px;
+                color: white;
+                text-decoration: none;
+                font-size: 18px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar a:hover {
+                    background-color: #007BFF;
+                }
+
+            .sidebar .logout {
+                background-color: #FF0000;
+                color: white;
+                padding: 12px 25px;
+                font-size: 18px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 30px;
+                text-align: center;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar .logout:hover {
+                    background-color: #cc0000;
+                }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        section {
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1000px;
+            background-color: white;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: grid;
+            gap: 15px;
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #444;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+            input[type="text"]:focus, input[type="number"]:focus {
+                border-color: #4CAF50;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            font-weight: 600;
+        }
+
+        td button {
+            padding: 8px 16px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            td button:hover {
+                background-color: #0056b3;
+            }
+
+        td img {
+            max-width: 50px;
+            max-height: 50px;
+            object-fit: cover;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 20px 10px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            section {
+                width: 90%;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            td button {
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar and Main Content... -->
+    <div class="sidebar">
+        <h1>Admin Panel</h1>
+        <div class="admin-name" id="admin-name"></div> <!-- Admin Name Displayed Here -->
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="manage_orders.html">Manage Orders</a>
+        <a href="manage_food_items.html">Manage Food Items</a>
+        <a href="manage_customers.html">Manage Customers</a> <!-- Manage Customers Link -->
+        <a href="manage_admins.html">Manage Admins</a>
+
+        <!-- Logout Button -->
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="navbar">
+            Manage Food Items
+        </div>
+
+        <section>
+            <h2 id="form-title">Add Food Item</h2>
+            <form id="add-food-item-form">
+                <input type="hidden" id="food-id">
+                <label for="food-name">Food Name:</label>
+                <input type="text" id="food-name" name="food-name" required><br>
+
+                <label for="food-description">Description:</label>
+                <input type="text" id="food-description" name="food-description" required><br>
+
+                <label for="food-price">Price (KES):</label>
+                <input type="number" id="food-price" name="food-price" required><br>
+
+                <label for="food-image">Food Image URL:</label>
+                <input type="text" id="food-image" name="food-image" required><br>
+
+                <button type="submit">Add Food Item</button>
+            </form>
+        </section>
+
+        <!-- Food Items List -->
+        <section>
+            <h2>Existing Food Items</h2>
+            <table id="food-items-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price (KES)</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Food items will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+
+    <script>
+const apiUrl = 'http://localhost:5282/api/admin/fooditems';  // Backend API endpoint
+
+        // Fetch existing food items and display them
+        function fetchFoodItems() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#food-items-table tbody');
+                    tableBody.innerHTML = '';  // Clear existing data
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+<td>${item.name}</td>
+<td>${item.description}</td>
+<td>${item.price}</td>
+<td><img src="${item.imageUrl}" alt="${item.name}" width="50"></td>
+<td>
+    <button onclick="editFoodItem(${item.id})">Edit</button>
+    <button onclick="deleteFoodItem(${item.id})">Delete</button>
+</td>
+`;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching food items:', error));
+        }
+
+        // Add or Edit a food item
+        document.getElementById('add-food-item-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const foodId = document.getElementById('food-id').value;
+            const foodData = {
+                id: foodId, // Ensure ID is sent in PUT request
+                name: document.getElementById('food-name').value,
+                description: document.getElementById('food-description').value,
+                price: parseFloat(document.getElementById('food-price').value), // Ensure price is a number
+                imageUrl: document.getElementById('food-image').value
+            };
+
+            const method = foodId ? 'PUT' : 'POST';
+            const url = foodId ? `${apiUrl}/${foodId}` : apiUrl;
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(foodData)
+            })
+                .then(response => response.json())
+                .then(() => {
+                    alert(`Food item ${foodId ? 'updated' : 'added'} successfully!`);
+                    fetchFoodItems();
+                    clearForm();
+                })
+                .catch(error => console.error(`Error ${foodId ? 'editing' : 'adding'} food item:`, error));
+        });
+
+        // Edit food item (populate form with existing data)
+        function editFoodItem(id) {
+            fetch(`${apiUrl}/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('food-id').value = data.id;
+                    document.getElementById('food-name').value = data.name;
+                    document.getElementById('food-description').value = data.description;
+                    document.getElementById('food-price').value = data.price;
+                    document.getElementById('food-image').value = data.imageUrl;
+                    document.getElementById('form-title').innerText = 'Edit Food Item';
+                })
+                .catch(error => console.error('Error fetching food item for editing:', error));
+        }
+
+        // Delete food item
+        function deleteFoodItem(id) {
+            fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+                .then(() => {
+                    alert('Food item deleted successfully!');
+                    fetchFoodItems();
+                })
+                .catch(error => console.error('Error deleting food item:', error));
+        }
+
+        // Clear form after add/edit
+        function clearForm() {
+            document.getElementById('food-id').value = '';
+            document.getElementById('food-name').value = '';
+            document.getElementById('food-description').value = '';
+            document.getElementById('food-price').value = '';
+            document.getElementById('food-image').value = '';
+            document.getElementById('form-title').innerText = 'Add Food Item';
+        }
+
+        // Initialize page by fetching food items
+        fetchFoodItems();</script>
+
+
+</body>
+</html>

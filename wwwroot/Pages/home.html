@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celtics Restaurant - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: black;
+        }
+
+        nav {
+            background-color: black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+            nav .logo h1 {
+                color: white;
+                font-style: italic;
+                font-size: 24px;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                padding: 0;
+                margin: 0;
+            }
+
+                nav ul li {
+                    margin: 0 15px;
+                }
+
+                    nav ul li a, nav ul li button {
+                        text-decoration: none;
+                        color: black;
+                        background-color: lightblue;
+                        padding: 10px 15px;
+                        border-radius: 5px;
+                        transition: 0.3s;
+                        display: inline-block;
+                        border: none;
+                    }
+
+                        nav ul li a:hover, nav ul li button:hover {
+                            background-color: navy;
+                            color: white;
+                        }
+
+        .hero {
+            background: url('file:///C:/Users/admin/Documents/celtics/CELTIC~4/CELTIC~1/wwwroot/images/DALLE2~1.WEB') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .overlay-container {
+            background: rgba(0, 0, 0, 0.6); /* Transparent dark container */
+            padding: 30px;
+            border-radius: 10px;
+            color: white;
+            width: 60%;
+            text-align: center;
+        }
+
+        .cta-button {
+            background: lightblue;
+            padding: 10px 20px;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+            .cta-button:hover {
+                background: navy;
+                color: white;
+            }
+
+        .about {
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <h1>Celtics Restaurant</h1>
+        </div>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><button id="login-logout-btn" onclick="handleLoginLogout()">Login</button></li>
+            <li><a href="order.html">Order</a></li>
+            <li><a href="cart.html">Cart</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="overlay-container">
+            <h2>Welcome to Celtics Restaurant</h2>
+            <p>Experience the best dining with our exquisite menu and exceptional service.<br />The food here is fresh and delicious, and the price is favorable. You are welcome to taste it.</p>
+            <a href="order.html" class="cta-button">Order Now</a>
+            <section class="about">
+                <h2>About Us</h2>
+                <p>Celtics Restaurant is dedicated to providing a memorable dining experience with a focus on quality ingredients and exceptional service. Our chefs create delicious dishes that cater to all tastes.</p>
+            </section>
+        </div>
+    </header>
+
+    <footer>
+        <p>&copy; 2025 Celtics Restaurant. All rights reserved.</p>
+        <p>Contact us: celticsrestaurant@gmail.com | +254 712 345 678 | +254 798 765 432</p>
+        <p>Location: Bogani Road in Karen, Nairobi</p>
+    </footer>
+
+    <script>
+        function updateNavBarButton() {
+            const loginLogoutButton = document.getElementById("login-logout-btn");
+            if (localStorage.getItem("isLoggedIn")) {
+                loginLogoutButton.textContent = "Logout";
+            } else {
+                loginLogoutButton.textContent = "Login";
+            }
+        }
+
+        function handleLoginLogout() {
+            const loginLogoutButton = document.getElementById("login-logout-btn");
+            if (localStorage.getItem("isLoggedIn")) {
+                localStorage.removeItem("isLoggedIn");
+                alert("You have been logged out.");
+                updateNavBarButton();
+            } else {
+                window.location.href = "login.html";
+            }
+        }
+
+        window.onload = function () {
+            updateNavBarButton();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Celtics Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('file:///C:/Users/admin/Documents/celtics/CELTIC~4/CELTIC~1/wwwroot/images/DALLE2~1.WEB') no-repeat center center/cover;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            width: 350px;
+            padding: 20px;
+            background: rgba(0, 0, 50, 0.8); /* Dark navy with transparency */
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+        }
+
+            button:hover {
+                background: #218838;
+            }
+
+        .login-link {
+            color: yellow;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        async function registerUser(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const password = document.getElementById("password").value.trim();
+            let adminCode = document.getElementById("adminCode").value.trim();
+            const errorDiv = document.getElementById("error-message");
+
+            errorDiv.textContent = ""; // Clear previous errors
+
+            // ✅ Validate required fields
+            if (!name || !email || !phoneNumber || !password) {
+                errorDiv.textContent = "❌ All fields except Admin Code are required!";
+                return;
+            }
+
+            // ✅ Validate password length
+            if (password.length < 6) {
+                errorDiv.textContent = "❌ Password must be at least 6 characters.";
+                return;
+            }
+
+            // ✅ Remove adminCode if empty (prevents sending an empty string)
+            if (!adminCode) {
+                adminCode = null;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5282/api/Auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, phoneNumber, password, adminCode })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("✅ Registration successful! Redirecting to login...");
+                    window.location.href = "login.html";  // Redirect after success
+                } else {
+                    errorDiv.textContent = data.message || "❌ Registration failed. Try again.";
+                }
+            } catch (error) {
+                errorDiv.textContent = "❌ Error connecting to server. Please check your API.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Create an Account</h2>
+        <form onsubmit="registerUser(event)">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="text" id="adminCode" placeholder="Admin Code (if applicable)">  <!-- Optional Admin Code -->
+            <button type="submit">Register</button>
+            <p id="error-message" class="error-message"></p>
+        </form>
+        <p>Already have an account? <a href="login.html" class="login-link">Login here</a></p>
+    </div>
+</body>
+</html>

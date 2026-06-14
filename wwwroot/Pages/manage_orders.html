@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders | Celtics Restaurant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #003366;
+            padding: 30px 15px;
+            color: white;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .sidebar h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+                text-align: center;
+                font-weight: normal;
+            }
+
+            .sidebar .admin-name {
+                font-size: 18px;
+                margin-bottom: 30px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 12px 15px;
+                color: white;
+                text-decoration: none;
+                font-size: 18px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar a:hover {
+                    background-color: #007BFF;
+                }
+
+            .sidebar .logout {
+                background-color: #FF0000;
+                color: white;
+                padding: 12px 25px;
+                font-size: 18px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 30px;
+                text-align: center;
+                transition: background 0.3s ease;
+            }
+
+                .sidebar .logout:hover {
+                    background-color: #cc0000;
+                }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .order-table th, .order-table td {
+                padding: 15px;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+
+            .order-table th {
+                background-color: #007BFF;
+                color: white;
+            }
+
+            .order-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            .order-table td button {
+                padding: 5px 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+        .update-status {
+            background-color: #28a745;
+            color: white;
+        }
+
+            .update-status:hover {
+                background-color: #218838;
+            }
+
+        .cancel-status {
+            background-color: #dc3545;
+            color: white;
+        }
+
+            .cancel-status:hover {
+                background-color: #c82333;
+            }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                padding: 20px 10px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+
+            .order-table td, .order-table th {
+                font-size: 14px;
+            }
+
+            .sidebar .logout {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const userRole = localStorage.getItem("userRole");
+            const userName = localStorage.getItem("userName");
+
+            // Ensure the user is logged in and is an admin
+            if (isLoggedIn !== "true" || userRole !== "Admin") {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Set the admin name in the sidebar
+            const adminNameElement = document.getElementById("admin-name");
+            if (adminNameElement) {
+                adminNameElement.textContent = `Admin - ${userName || "Unknown"}`;
+            }
+        };
+        // Fetch Orders from the API
+        async function fetchOrders() {
+            try {
+                const response = await fetch('http://localhost:5282/api/admin/orders');  // Adjust the URL to match your API endpoint
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const orders = await response.json();
+                populateOrderTable(orders);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                alert('Failed to fetch orders. Please check your API endpoint or server.');
+            }
+        }
+
+        // Populate the Order Table with fetched data
+        function populateOrderTable(orders) {
+            const orderTable = document.getElementById('order-table-body');
+            orderTable.innerHTML = ''; // Clear any existing rows
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                            <td>${order.id}</td>
+                            <td>${order.customerName}</td>
+                            <td>${order.orderItems.map(item => item.foodItemName).join(', ')}</td>
+                            <td>${order.status}</td>
+                            <td>
+                                <button class="update-status" onclick="updateStatus(${order.id})">Update Status</button>
+                                <button class="cancel-status" onclick="cancelOrder(${order.id})">Cancel Order</button>
+                            </td>
+                        `;
+                orderTable.appendChild(row);
+            });
+        }
+
+        // Update Order Status via API
+        async function updateStatus(orderId) {
+            const newStatus = prompt("Enter new status for the order (e.g., Ready, Out for Delivery):");
+            if (!newStatus) return;
+
+            try {
+                const response = await fetch(`http://localhost:5282/api/admin/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ NewStatus: newStatus })  // 🔴 Ensure property name matches DTO
+                });
+
+                if (response.ok) {
+                    alert(`Order ID ${orderId} status updated.`);
+                    fetchOrders();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to update order status: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error);
+            }
+        }
+
+
+        // Cancel Order via API
+        async function cancelOrder(orderId) {
+            try {
+                const response = await fetch(`http://localhost:5282/api/admin/orders/${orderId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    alert(`Order ID ${orderId} canceled.`);
+                    fetchOrders();  // Reload the orders list
+                } else {
+                    alert('Failed to cancel order.');
+                }
+            } catch (error) {
+                console.error('Error canceling order:', error);
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userRole");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("adminName");  // Remove the admin name from localStorage
+            window.location.href = "login.html";  // Redirect to login page
+        }
+
+        // Display Admin's Name from localStorage
+        window.onload = function () {
+            const adminName = localStorage.getItem('adminName');
+            if (adminName) {
+                document.getElementById('admin-name').textContent = `Admin - ${adminName}`;
+            }
+            fetchOrders();  // Call to load orders
+        };
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1>Admin Panel</h1>
+        <p class="admin-name" id="admin-name"></p>
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="manage_orders.html">Manage Orders</a>
+        <a href="manage_food_items.html">Manage Food Items</a>
+        <a href="manage_customers.html">Manage Customers</a>
+        <a href="manage_admins.html">Manage Admins</a>
+
+        <!-- Logout Button -->
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="navbar">
+            Manage Orders
+        </div>
+
+        <div class="container">
+            <h2>Orders List</h2>
+
+            <!-- Table displaying the orders -->
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Food Item</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="order-table-body">
+                    <!-- Orders will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
